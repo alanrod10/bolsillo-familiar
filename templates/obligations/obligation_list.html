@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Deudas y Cuotas - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Cronograma de Deudas y Cuotas</h1>
+    <a href="{% url 'obligation_create' %}" class="btn" style="background: var(--rojo-error);">+ Nueva Deuda</a>
+</div>
+
+{% for obs in obligations %}
+<div class="card" style="border-left: 4px solid var(--rojo-error); margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+            <h2 style="margin-bottom: 0.2rem;">{{ obs.concept }}</h2>
+            <p style="color: var(--gris-texto); font-size: 0.9rem;">Acreedor: <strong>{{ obs.creditor }}</strong> | Categoría: {{ obs.category.name }}</p>
+        </div>
+        <div style="text-align: right;">
+            <p style="font-size: 0.9rem;">Total a Pagar</p>
+            <h3 style="color: var(--rojo-error);">$ {{ obs.total_amount }}</h3>
+        </div>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table class="table" style="font-size: 0.9rem;">
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th>Cuota</th>
+                    <th>Vencimiento</th>
+                    <th>Importe</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cuota in obs.installments.all %}
+                <tr>
+                    <td>{{ cuota.number }} / {{ obs.installments_count }}</td>
+                    <td>{{ cuota.due_date|date:"d/m/Y" }}</td>
+                    <td>$ {{ cuota.amount }}</td>
+                    <td>
+                        {% if cuota.is_paid %}
+                            <span style="color: var(--verde-positivo); font-weight: bold;">✔ Pagada</span>
+                        {% else %}
+                            <span style="color: var(--naranja-alerta); font-weight: bold;">⏳ Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not cuota.is_paid %}
+                            <a href="{% url 'installment_pay' cuota.id %}" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--rojo-error);">Pagar</a>
+                        {% else %}
+                            <span style="color: var(--gris-texto); font-size: 0.8rem;">Abonado</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% empty %}
+<div class="card">
+    <p>No tienes deudas ni cuotas registradas. ¡Excelente!</p>
+</div>
+{% endfor %}
+{% endblock %}

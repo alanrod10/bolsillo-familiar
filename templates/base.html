@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BolsilloFamiliar{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .table th, .table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+        .text-success { color: var(--verde-positivo); }
+        .text-danger { color: var(--rojo-error); }
+        .form-control { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h2>BolsilloFamiliar</h2>
+        <nav>
+            <a href="{% url 'dashboard' %}">🏠 Panel Principal</a>
+            <a href="{% url 'account_list' %}">🏦 Mis Cuentas</a>
+            <a href="{% url 'obligation_list' %}">📅 Deudas y Cuotas</a>
+            <a href="{% url 'budget_list' %}">📊 Presupuestos</a>
+            <a href="{% url 'transaction_report' %}">📈 Informes y CSV</a>
+            <a href="{% url 'transaction_create' tx_type='ingreso' %}">⬇️ Nuevo Ingreso</a>
+            <a href="{% url 'transaction_create' tx_type='gasto' %}">⬆️ Nuevo Gasto</a>
+            <a href="{% url 'transfer_create' %}">↔️ Nueva Transferencia</a>
+        </nav>
+        <div style="margin-top: auto;">
+            <a href="{% url 'logout' %}" style="background: rgba(0,0,0,0.2);">Cerrar Sesión</a>
+        </div>
+    </aside>
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - BolsilloFamiliar{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 0 auto; border-top: 4px solid var(--verde-petroleo);">
+    <h2 style="margin-bottom: 1.5rem;">{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div><label>{{ form.category.label }} *</label>{{ form.category }}{{ form.category.errors }}</div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Mes *</label>{{ form.month }}{{ form.month.errors }}</div>
+            <div><label>Año *</label>{{ form.year }}{{ form.year.errors }}</div>
+        </div>
+        
+        <div><label>Límite Mensual ($) *</label>{{ form.limit }}{{ form.limit.errors }}</div>
+        
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1; font-size: 1.1rem;">Guardar Presupuesto</button>
+            <a href="{% url 'budget_list' %}" class="btn" style="background: #ccc; color: #333; flex: 1; text-align: center;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

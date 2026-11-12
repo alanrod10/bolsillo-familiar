@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin-bottom: 1.5rem;">{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Concepto *</label>{{ form.concept }}{{ form.concept.errors }}</div>
+            <div><label>Importe *</label>{{ form.amount }}{{ form.amount.errors }}</div>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Fecha *</label>{{ form.date }}{{ form.date.errors }}</div>
+            <div><label>Cuenta *</label>{{ form.account }}{{ form.account.errors }}</div>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Categoría *</label>{{ form.category }}{{ form.category.errors }}</div>
+            <div><label>Integrante (Opcional)</label>{{ form.member }}{{ form.member.errors }}</div>
+        </div>
+        
+        <div><label>Descripción</label>{{ form.description }}{{ form.description.errors }}</div>
+        
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1; font-size: 1.1rem;">Guardar {{ tx_type|title }}</button>
+            <a href="{% url 'dashboard' %}" class="btn" style="background: #ccc; color: #333; flex: 1; text-align: center;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

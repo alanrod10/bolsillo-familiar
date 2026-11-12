@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Presupuestos - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Control de Presupuestos (Mes {{ current_month }}/{{ current_year }})</h1>
+    <a href="{% url 'budget_create' %}" class="btn" style="background: var(--verde-petroleo);">+ Nuevo Presupuesto</a>
+</div>
+
+<!-- Filtro básico por GET -->
+<div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+    <form method="get" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div>
+            <label style="font-size: 0.9rem;">Mes</label>
+            <input type="number" name="month" value="{{ current_month }}" min="1" max="12" class="form-control" style="margin-bottom: 0; padding: 0.4rem;">
+        </div>
+        <div>
+            <label style="font-size: 0.9rem;">Año</label>
+            <input type="number" name="year" value="{{ current_year }}" min="2020" class="form-control" style="margin-bottom: 0; padding: 0.4rem;">
+        </div>
+        <button type="submit" class="btn" style="padding: 0.4rem 1rem;">Filtrar</button>
+    </form>
+</div>
+
+<div class="grid-3">
+    {% for item in budgets_data %}
+    <div class="card" style="border-left: 4px solid {{ item.status_color }};">
+        <h3 style="margin-bottom: 0.5rem;">{{ item.budget.category.name }}</h3>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <span>Límite: <strong>$ {{ item.limit }}</strong></span>
+            <span style="color: {{ item.status_color }}; font-weight: bold;">{{ item.percentage }}%</span>
+        </div>
+        
+        <!-- Barra de Progreso CSS Vanilla -->
+        <div style="width: 100%; background: #e0e0e0; border-radius: 4px; height: 12px; margin-bottom: 1rem; overflow: hidden;">
+            <div style="height: 100%; background: {{ item.status_color }}; width: {% if item.percentage > 100 %}100{% else %}{{ item.percentage }}{% endif %}%;"></div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--gris-texto);">
+            <span>Gastado: $ {{ item.spent }}</span>
+            <span>Disponible: $ {{ item.available }}</span>
+        </div>
+    </div>
+    {% empty %}
+    <p>No tienes presupuestos definidos para este período.</p>
+    {% endfor %}
+</div>
+{% endblock %}

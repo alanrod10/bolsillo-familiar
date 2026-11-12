@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto; border-top: 4px solid var(--naranja-alerta);">
+    <h2 style="margin-bottom: 1.5rem;">{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Cuenta de Origen *</label>{{ form.origin_account }}{{ form.origin_account.errors }}</div>
+            <div><label>Cuenta de Destino *</label>{{ form.destination_account }}{{ form.destination_account.errors }}</div>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>Importe *</label>{{ form.amount }}{{ form.amount.errors }}</div>
+            <div><label>Fecha *</label>{{ form.date }}{{ form.date.errors }}</div>
+        </div>
+        
+        <div><label>Descripción (Opcional)</label>{{ form.description }}{{ form.description.errors }}</div>
+        
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1; font-size: 1.1rem; background: var(--naranja-alerta);">Ejecutar Transferencia</button>
+            <a href="{% url 'dashboard' %}" class="btn" style="background: #ccc; color: #333; flex: 1; text-align: center;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

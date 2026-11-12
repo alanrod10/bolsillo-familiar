@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Cuentas - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Estado de Cuentas</h1>
+
+<div class="grid-3">
+    {% for acc in accounts %}
+    <div class="card" style="border-left: 4px solid var(--verde-petroleo);">
+        <h3>{{ acc.obj.name }}</h3>
+        <p style="color: var(--gris-texto); font-size: 0.9rem; margin-bottom: 1rem;">{{ acc.obj.get_type_display }}</p>
+        <p>Saldo Actual:</p>
+        <h2 style="margin-top: 0.5rem; color: {% if acc.balance >= 0 %}var(--verde-positivo){% else %}var(--rojo-error){% endif %};">
+            $ {{ acc.balance }}
+        </h2>
+    </div>
+    {% empty %}
+    <p>No tienes cuentas registradas.</p>
+    {% endfor %}
+</div>
+{% endblock %}

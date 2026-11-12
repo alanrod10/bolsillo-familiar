@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - BolsilloFamiliar{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto; border-top: 4px solid var(--rojo-error);">
+    <h2 style="margin-bottom: 1.5rem;">{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>{{ form.concept.label }} *</label>{{ form.concept }}{{ form.concept.errors }}</div>
+            <div><label>{{ form.creditor.label }} *</label>{{ form.creditor }}{{ form.creditor.errors }}</div>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>{{ form.total_amount.label }} *</label>{{ form.total_amount }}{{ form.total_amount.errors }}</div>
+            <div><label>{{ form.installments_count.label }} *</label>{{ form.installments_count }}{{ form.installments_count.errors }}</div>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+            <div><label>{{ form.category.label }} *</label>{{ form.category }}{{ form.category.errors }}</div>
+            <div><label>{{ form.first_due_date.label }} *</label>{{ form.first_due_date }}{{ form.first_due_date.errors }}</div>
+        </div>
+        
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1; font-size: 1.1rem; background: var(--rojo-error);">Generar Cronograma</button>
+            <a href="{% url 'obligation_list' %}" class="btn" style="background: #ccc; color: #333; flex: 1; text-align: center;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

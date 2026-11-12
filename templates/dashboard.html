@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Principal - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Resumen de {{ household.name }}</h1>
+
+<div class="grid-3">
+    <div class="card" style="border-left: 4px solid var(--verde-petroleo);">
+        <p>Saldo Total Acumulado</p>
+        <h2 style="font-size: 2rem;">$ {{ total_balance }}</h2>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--verde-positivo);">
+        <p>Ingresos del Mes</p>
+        <h2 class="text-success" style="font-size: 2rem;">$ {{ incomes_month }}</h2>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--rojo-error);">
+        <p>Gastos del Mes</p>
+        <h2 class="text-danger" style="font-size: 2rem;">$ {{ expenses_month }}</h2>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Últimos Movimientos</h3>
+    <div style="overflow-x: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Cuenta</th>
+                    <th>Categoría</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in recent_txs %}
+                <tr>
+                    <td>{{ tx.date|date:"d/m/Y" }}</td>
+                    <td>{{ tx.concept }}</td>
+                    <td>{{ tx.account.name }}</td>
+                    <td>{{ tx.category.name }}</td>
+                    <td class="{% if tx.category.type == 'ingreso' %}text-success{% else %}text-danger{% endif %}">
+                        {% if tx.category.type == 'ingreso' %}+{% else %}-{% endif %} $ {{ tx.amount }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No hay movimientos registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Informes - BolsilloFamiliar{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Historial y Reportes</h1>
+</div>
+
+<div class="card" style="margin-bottom: 2rem; border-top: 4px solid var(--verde-petroleo);">
+    <form method="get" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+        <div style="flex: 1; min-width: 150px;">
+            <label style="font-size: 0.9rem;">Desde</label>
+            <input type="date" name="date_from" value="{{ filters.date_from }}" class="form-control" style="margin-bottom: 0;">
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+            <label style="font-size: 0.9rem;">Hasta</label>
+            <input type="date" name="date_to" value="{{ filters.date_to }}" class="form-control" style="margin-bottom: 0;">
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+            <label style="font-size: 0.9rem;">Cuenta</label>
+            <select name="account" class="form-control" style="margin-bottom: 0;">
+                <option value="">Todas las cuentas</option>
+                {% for acc in accounts %}
+                <option value="{{ acc.id }}" {% if filters.account == acc.id|stringformat:"s" %}selected{% endif %}>{{ acc.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+            <label style="font-size: 0.9rem;">Tipo</label>
+            <select name="type" class="form-control" style="margin-bottom: 0;">
+                <option value="">Todos</option>
+                <option value="ingreso" {% if filters.type == 'ingreso' %}selected{% endif %}>Ingresos</option>
+                <option value="gasto" {% if filters.type == 'gasto' %}selected{% endif %}>Gastos</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn" style="background: var(--verde-petroleo);">Filtrar</button>
+            <button type="submit" name="export" value="csv" class="btn" style="background: var(--verde-positivo);">📥 Exportar CSV</button>
+            <a href="{% url 'transaction_report' %}" class="btn" style="background: #ccc; color: #333;">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div style="overflow-x: auto;">
+        <table class="table" style="font-size: 0.9rem;">
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Cuenta</th>
+                    <th>Categoría</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.date|date:"d/m/Y" }}</td>
+                    <td>{{ tx.concept }}{% if tx.is_voided %} <span style="color:var(--rojo-error);">(Anulada)</span>{% endif %}</td>
+                    <td>{{ tx.account.name }}</td>
+                    <td>{{ tx.category.name }}</td>
+                    <td style="font-weight: bold; color: {% if tx.category.type == 'ingreso' %}var(--verde-positivo){% else %}var(--rojo-error){% endif %};">
+                        {% if tx.category.type == 'ingreso' %}+{% else %}-{% endif %} $ {{ tx.amount }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No se encontraron movimientos para los filtros seleccionados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
